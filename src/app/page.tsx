@@ -1,4 +1,6 @@
 import { getTrendingTokens } from "@/lib/api";
+import TokenCard from "@/components/TokenCard";
+import ErrorMessage from "@/components/ErrorMessage";
 
 type TrendingItem = {
   token: { name: string; symbol: string; mint: string };
@@ -21,7 +23,7 @@ export default async function HomePage() {
     return (
       <main style={{ padding: 24 }}>
         <h1>Trending Tokens</h1>
-        <p style={{ color: "red" }}>Error: {error}</p>
+        <ErrorMessage message={error} />
       </main>
     );
   }
@@ -40,16 +42,13 @@ export default async function HomePage() {
         </thead>
         <tbody>
           {tokens.map((t) => (
-            <tr key={t.token.mint} style={{ borderTop: "1px solid #eee" }}>
-              <td>{t.token.name}</td>
-              <td>{t.token.symbol}</td>
-              <td>${t.pools?.[0]?.price?.usd?.toFixed(6) ?? "N/A"}</td>
-              <td>
-                {t.events?.["24h"]?.priceChangePercentage != null
-                  ? `${t.events["24h"].priceChangePercentage.toFixed(2)}%`
-                  : "N/A"}
-              </td>
-            </tr>
+            <TokenCard
+              key={t.token.mint}
+              name={t.token.name}
+              symbol={t.token.symbol}
+              priceUsd={t.pools?.[0]?.price?.usd ?? null}
+              change24h={t.events?.["24h"]?.priceChangePercentage ?? null}
+            />
           ))}
         </tbody>
       </table>

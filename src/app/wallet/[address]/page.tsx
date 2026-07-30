@@ -1,24 +1,24 @@
 import { getWalletInfo } from "@/lib/api";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 function isValidSolanaAddress(address: string) {
-  // Basic check: Solana addresses are base58, 32-44 chars
   return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 }
 
 export default async function WalletPage({
   params,
 }: {
-  params: { address: string };
+  params: Promise<{ address: string }>;
 }) {
-  const { address } = params;
+  const { address } = await params;
 
   if (!isValidSolanaAddress(address)) {
     return (
       <main style={{ padding: 24 }}>
         <h1>Wallet Info</h1>
-        <p style={{ color: "red" }}>Invalid wallet address.</p>
+        <ErrorMessage message="Invalid wallet address." />
       </main>
     );
   }
@@ -36,7 +36,7 @@ export default async function WalletPage({
     return (
       <main style={{ padding: 24 }}>
         <h1>Wallet Info</h1>
-        <p style={{ color: "red" }}>Error: {error}</p>
+        <ErrorMessage message={error} />
       </main>
     );
   }
