@@ -1,15 +1,23 @@
 const API_KEY = process.env.SOLANA_TRACKER_API_KEY;
+const BASE_URL = "https://data.solanatracker.io";
 
-export async function fetchFromAPI(endpoint: string) {
-    const response = await fetch(endpoint, {
-        headers: {
-            "x-api-key": API_KEY!
-        }
-    });
+function getHeaders() {
+  const apiKey = API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing SOLANA_TRACKER_API_KEY in .env.local");
+  }
+  return { "x-api-key": apiKey };
+}
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch");
-    }
+export async function getTrendingTokens(timeframe: string = "24h") {
+  const res = await fetch(`${BASE_URL}/tokens/trending/${timeframe}`, {
+    headers: getHeaders(),
+    cache: "no-store",
+  });
 
-    return response.json();
+  if (!res.ok) {
+    throw new Error(`Failed to fetch trending tokens (${res.status})`);
+  }
+
+  return res.json();
 }
