@@ -1,3 +1,5 @@
-export default function Loading() {
-  return <main style={{ padding: 24 }}>Loading trending tokens...</main>;
+import Loading from "@/components/Loading";
+
+export default function LoadingPage() {
+  return <Loading message="Loading trending tokens..." />;
 }
