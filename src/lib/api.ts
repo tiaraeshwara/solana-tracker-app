@@ -21,3 +21,16 @@ export async function getTrendingTokens(timeframe: string = "24h") {
 
   return res.json();
 }
+
+export async function getWalletInfo(address: string) {
+  const res = await fetch(`${BASE_URL}/wallet/${address}`, {
+    headers: getHeaders(),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch wallet info (${res.status})`);
+  }
+
+  return res.json();
+}
